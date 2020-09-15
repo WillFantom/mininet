@@ -11,10 +11,12 @@ import threading
 
 from bottle import Bottle, HTTPResponse, request
 
-from mininet.log import info, output, error
+from mininet.log import debug, info, output, error
 
 class REST( Bottle ):
-    "Simple RESTful interface to talk to nodes."
+    "Simple ReSTful interface to talk to nodes."
+
+    apiPrefix = 'api/v1/'
 
     def __init__( self, mininet, port=8080, *args, **kwargs ):
         """Start and run REST API for host interaction
@@ -28,7 +30,11 @@ class REST( Bottle ):
         info( '*** Starting API\n' )
 
     def run_server( self, port ):
-        self.route( '/nodes', callback=self.get_nodes )
+        self.route( self.apiPrefix + 'nodes', callback=self.get_nodes )
+        self.route( self.apiPrefix + 'switches', callback=self.get_switches )
+        self.route( self.apiPrefix + 'hosts', callback=self.get_hosts )
+        self.route( self.apiPrefix + 'controllers', callback=self.get_controllers )
+        self.route( self.apiPrefix + 'links', callback=self.get_links )
         try:
             self.run( host='0.0.0.0', port=port, quiet=True )
         except Exception:
@@ -43,4 +49,24 @@ class REST( Bottle ):
     def get_nodes( self ):
         """Get a list of nodes that exist within a topo"""
         data = { "nodes": [ node for node in self.mn ] }
+        return self.build_response( data )
+
+    def get_switches( self ):
+        """Get a list of switches that exist within a topo"""
+        data = { "switches": [ node for node in self.mn.switches ] }
+        return self.build_response( data )
+    
+    def get_hosts( self ):
+        """Get a list of hosts that exist within a topo"""
+        data = { "hosts": [ node for node in self.mn.hosts ] }
+        return self.build_response( data )
+
+    def get_controllers( self ):
+        """Get a list of controllers that exist within a topo"""
+        data = { "controllers": [ node for node in self.mn.controllers ] }
+        return self.build_response( data )
+
+    def get_links( self ):
+        """Get a list of links that exist within a topo"""
+        data = { "links": [ node for node in self.mn.links ] }
         return self.build_response( data )
