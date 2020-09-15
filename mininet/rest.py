@@ -4,10 +4,12 @@ A simple REST interface for Mininet.
 The Mininet REST API provides a simple way to control nodes when 
 running mininet headless.
 """
-from bottle import Bottle, HTTPResponse, request
-import threading
+
 import json
 import os.path
+import threading
+
+from bottle import Bottle, HTTPResponse, request
 
 from mininet.log import info, output, error
 
