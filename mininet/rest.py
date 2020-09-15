@@ -9,14 +9,17 @@ import json
 import os.path
 import threading
 
-from bottle import Bottle, HTTPResponse, request
+try:
+    from bottle import Bottle, HTTPResponse, request
+except ImportError as e:
+    pass
 
 from mininet.log import debug, info, output, error
 
 class REST( Bottle ):
     "Simple ReSTful interface to talk to nodes."
 
-    apiPrefix = 'api/v1/'
+    apiPrefix = '/api/v1/'
 
     def __init__( self, mininet, port=8080, *args, **kwargs ):
         """Start and run REST API for host interaction
@@ -39,6 +42,7 @@ class REST( Bottle ):
             self.run( host='0.0.0.0', port=port, quiet=True )
         except Exception:
             error( 'Error starting rest api\n' )
+        info( port )
 
     def build_response( self, data, code=200 ):
         if not isinstance( data, dict ):
@@ -53,20 +57,20 @@ class REST( Bottle ):
 
     def get_switches( self ):
         """Get a list of switches that exist within a topo"""
-        data = { "switches": [ node for node in self.mn.switches ] }
+        data = { "switches": [ node.name for node in self.mn.switches ] }
         return self.build_response( data )
     
     def get_hosts( self ):
         """Get a list of hosts that exist within a topo"""
-        data = { "hosts": [ node for node in self.mn.hosts ] }
+        data = { "hosts": [ node.name for node in self.mn.hosts ] }
         return self.build_response( data )
 
     def get_controllers( self ):
         """Get a list of controllers that exist within a topo"""
-        data = { "controllers": [ node for node in self.mn.controllers ] }
+        data = { "controllers": [ node.name for node in self.mn.controllers ] }
         return self.build_response( data )
 
     def get_links( self ):
         """Get a list of links that exist within a topo"""
-        data = { "links": [ node for node in self.mn.links ] }
+        data = { "links": [ ( link.intf1.name, link.intf2.name ) for link in self.mn.links ] }
         return self.build_response( data )
