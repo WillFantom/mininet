@@ -106,7 +106,7 @@ function version_ge {
 PYTHON=${PYTHON:-python}
 PRINTVERSION='import sys; print(sys.version_info)'
 PYTHON_VERSION=unknown
-for python in $PYTHON python2 python3; do
+for python in $PYTHON python3 python2; do
     if $python -c "$PRINTVERSION" |& grep 'major=2'; then
         PYTHON=$python; PYTHON_VERSION=2; PYPKG=python
         break
@@ -170,12 +170,12 @@ function mn_deps {
 		$install gcc make socat psmisc xterm openssh iperf \
 			iproute telnet ${PYPKG}-setuptools libcgroup-tools \
 			ethtool help2man python-pyflakes python3-pylint \
-            python-pep8 ${PYPKG}-pexpect ${PYPKG}-tk ${PYPKG}-bottle
+            python-pep8 ${PYPKG}-pexpect ${PYPKG}-tk python3-bottle
     else  # Debian/Ubuntu
         $install gcc make socat psmisc xterm ssh iperf telnet \
                  ethtool help2man pyflakes pylint pep8 \
                  ${PYPKG}-setuptools ${PYPKG}-pexpect ${PYPKG}-tk \
-                 ${PYPKG}-bottle
+                 python3-bottle
         $install iproute2 || $install iproute
         $install cgroup-tools || $install cgroup-bin
     fi
