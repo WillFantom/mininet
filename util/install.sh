@@ -164,16 +164,18 @@ function mn_deps {
     if [ "$DIST" = "Fedora" -o "$DIST" = "RedHatEnterpriseServer" ]; then
         $install gcc make socat psmisc xterm openssh-clients iperf \
             iproute telnet python-setuptools libcgroup-tools \
-            ethtool help2man pyflakes pylint python-pep8 python-pexpect
+            ethtool help2man pyflakes pylint python-pep8 python-pexpect \
+            python-bottle
     elif [ "$DIST" = "SUSE LINUX"  ]; then
 		$install gcc make socat psmisc xterm openssh iperf \
 			iproute telnet ${PYPKG}-setuptools libcgroup-tools \
 			ethtool help2man python-pyflakes python3-pylint \
-                        python-pep8 ${PYPKG}-pexpect ${PYPKG}-tk
+            python-pep8 ${PYPKG}-pexpect ${PYPKG}-tk ${PYPKG}-bottle
     else  # Debian/Ubuntu
         $install gcc make socat psmisc xterm ssh iperf telnet \
                  ethtool help2man pyflakes pylint pep8 \
-                 ${PYPKG}-setuptools ${PYPKG}-pexpect ${PYPKG}-tk
+                 ${PYPKG}-setuptools ${PYPKG}-pexpect ${PYPKG}-tk \
+                 ${PYPKG}-bottle
         $install iproute2 || $install iproute
         $install cgroup-tools || $install cgroup-bin
     fi
